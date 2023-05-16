@@ -1,0 +1,381 @@
+public class P2_RuizP2 {
+        
+ 
+    private static final int ID_MIN = 1;
+    private static final int ID_MAX = 999;
+    private static final int BORSA_MIN = 0;
+    private static final int BORSA_MAX = 4;
+    private static final int CODI_MIN = 10;
+    private static final int CODI_MAX = 999;
+    private static final int TIPUS_MIN = 0;
+    private static final int TIPUS_MAX = 1;
+    private static final int IMPORT_MIN = 0;
+    private static final int IMPORT_MAX = 100000;
+    private static final int DIA_MIN = 1;
+    private static final int MES_MIN = 1;
+    private static final int MES_MAX = 12;
+    private static final int ANY_MIN = 2023;
+    private static final int ANY_MAX = 2050;
+
+    private static final int MAX_MOVIMENTS = 10;
+
+    // Definimos las constantes para los índices de las columnas
+    private static final int ID = 0;
+    private static final int BORSA = 1;
+    private static final int CODI = 2;
+    private static final int TIPUS = 3;
+    private static final int IMPORT = 4;
+    private static final int DIA = 5;
+    private static final int MES = 6;
+    private static final int ANY = 7;
+
+    public static void bubbleSort(int[][] moviments, int n) {
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (moviments[j][ID] > moviments[j + 1][ID]) {
+                    int[] temp = moviments[j];
+                    moviments[j] = moviments[j + 1];
+                    moviments[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    public static void mostrarMoviments(int[][] moviments, int movimentsIntroduits) {
+        System.out.println("Descripció dels moviments realitzats en borsa:");
+        System.out.println("id\tborsa\tcodi empresa\ttipus\timporte\tdata");
+        for (int i = 0; i < movimentsIntroduits; i++) {
+            int[] moviment = moviments[i];
+            String borsaStr;
+            switch (moviment[BORSA]) {
+                case 0:
+                    borsaStr = "NY";
+                    break;
+                case 1:
+                    borsaStr = "Madrid";
+                    break;
+                case 2:
+                    borsaStr = "Paris";
+                    break;
+                case 3:
+                    borsaStr = "Londres";
+                    break;
+                case 4:
+                    borsaStr = "Frankfurt";
+                    break;
+                default:
+                    borsaStr = "Desconeguda";
+            }
+            System.out.println(moviment[ID] + "\t" + borsaStr + "\t" + moviment[CODI] + "\t" + (moviment[TIPUS] == 0 ? "compra" : "venda") + "\t" + moviment[IMPORT] + "\t" + moviment[DIA] + "/" + moviment[MES] + "/" + moviment[ANY]);
+        }
+    }
+
+    public static void main(String[] args) {
+
+        // llegir dades
+        Scanner scanner = new Scanner(System.in);
+
+        // variables
+        int intents;
+        boolean dadaCorrecta;
+        int id = 0, borsa = 0, codi = 0, tipus = 0, importMoviment = 0, dia = 0, mes = 0, any = 0;
+        int comptador = 0, resposta = 0, movimentsIntroduits = 0;
+        boolean introduirMes = true;
+        boolean exitWithError = false;
+
+        int[][] moviments = new int[MAX_MOVIMENTS][8];
+
+        while (introduirMes && movimentsIntroduits < MAX_MOVIMENTS) {
+            // selleccionar id
+            intents = 0;
+            do {
+                System.out.print("Id del moviment?: ");
+                id = scanner.nextInt();
+                dadaCorrecta = id >= ID_MIN && id <= ID_MAX;
+
+                if (!dadaCorrecta) {
+                    System.out.println("Error: Id no vàlid.");
+                    intents++;
+                }
+            } while (!dadaCorrecta && intents < 3);
+
+            if (!dadaCorrecta) {
+                System.out.println("Error: S'han esgotat els intents. Finalitzant el programa. S'ha introduït " + movimentsIntroduits + " registre de clients");
+                exitWithError = true;
+                System.exit(1);
+            }
+
+            // seleccionar borsa
+            intents = 0;
+            do {
+                System.out.println("Borsa de valors?: ");
+                System.out.println("NY (0)");
+                System.out.println("Madrid (1)");
+                System.out.println("Paris (2)");
+                System.out.println("Londres (3)");
+                System.out.println("Frankfurt (4)");
+                System.out.print(": ");
+
+                borsa = scanner.nextInt();
+                dadaCorrecta = borsa >= BORSA_MIN && borsa <= BORSA_MAX;
+
+                if (!dadaCorrecta) {
+                    System.out.println("Error: Borsa no vàlida.");
+                    intents++;
+                }
+            } while (!dadaCorrecta && intents < 3);
+
+            if (!dadaCorrecta) {
+                System.out.println("Error: S'han esgotat els intents. Finalitzant el programa. S'ha introduït" + movimentsIntroduits + " registre de clients");
+                exitWithError = true;
+                System.exit(1);
+            }
+            // seleccionar codi
+            intents = 0;
+            do {
+                System.out.print("Codi de l'empresa?: ");
+                codi = scanner.nextInt();
+                dadaCorrecta = codi >= CODI_MIN && codi <= CODI_MAX;
+                if (!dadaCorrecta) {
+                    System.out.println("Error: Codi no vàlid.");
+                    intents++;
+                }
+            } while (!dadaCorrecta && intents < 3);
+
+            if (!dadaCorrecta) {
+                System.out.println("Error: S'han esgotat els intents. Finalitzant el programa. S'ha introduït " + movimentsIntroduits + " registre de clients");
+                exitWithError = true;
+                System.exit(1);
+            }
+
+            // seleccionar moviment
+            intents = 0;
+            do {
+                System.out.println("tipus de moviment?: ");
+                System.out.println("compra (0)");
+                System.out.println("venda (1)");
+                System.out.print(": ");
+
+                tipus = scanner.nextInt();
+                dadaCorrecta = tipus >= TIPUS_MIN && tipus <= TIPUS_MAX;
+
+                if (!dadaCorrecta) {
+                    System.out.println("Error: Tipus de moviment no vàlid.");
+                    intents++;
+                }
+            } while (!dadaCorrecta && intents < 3);
+
+            if (!dadaCorrecta) {
+                System.out.println("Error: S'han esgotat els intents. Finalitzant el programa. S'ha introduït " + moviments
+                        + " registre de clients");
+                exitWithError = true;
+                System.exit(1);
+            }
+            // seleccionar import
+            intents = 0;
+            do {
+                System.out.print(tipus == 0 ? "import de la compra?: " : "import de la venda?: ");
+                importMoviment = scanner.nextInt();
+                dadaCorrecta = importMoviment >= IMPORT_MIN && importMoviment <= IMPORT_MAX;
+
+                if (!dadaCorrecta) {
+                    System.out.println("Error: Import no vàlid.");
+                    intents++;
+                }
+            } while (!dadaCorrecta && intents < 3);
+
+            if (!dadaCorrecta) {
+                System.out.println("Error: S'han esgotat els intents. Finalitzant el programa. S'ha introduït " + movimentsIntroduits + " registre de clients");
+                exitWithError = true;
+                System.exit(1);
+            }
+
+            // seleccionar data
+            intents = 0;
+            do {
+                System.out.println("data? ");
+                System.out.print("Dia: ");
+                dia = scanner.nextInt();
+                System.out.print("Mes: ");
+                mes = scanner.nextInt();
+                System.out.print("Any: ");
+                any = scanner.nextInt();
+
+                // Comprovar si l'any és bixest
+                boolean anyBixest = (any % 4 == 0 && any % 100 != 0) || (any % 400 == 0);
+
+                // Determinar el nombre màxim de dies en funció del mes i any
+                int diaMax;
+                if (mes == 2) {
+                    diaMax = anyBixest ? 29 : 28;
+                } else if (mes == 4 || mes == 6 || mes == 9 || mes == 11) {
+                    diaMax = 30;
+                } else {
+                    diaMax = 31;
+                }
+
+                dadaCorrecta = dia >= DIA_MIN && dia <= diaMax
+                        && mes >= MES_MIN && mes <= MES_MAX
+                        && any >= ANY_MIN && any <= ANY_MAX;
+
+                if (!dadaCorrecta) {
+                    System.out.println("Error: Data no vàlida.");
+                    intents++;
+                }
+            } while (!dadaCorrecta && intents < 3);
+
+            if (!dadaCorrecta) {
+                System.out.println("Error: S'han esgotat els intents.");
+                if (movimentsIntroduits > 0) {
+                    System.out.println("S'ha introduït " + movimentsIntroduits + " registre(s) de clients.");
+                }
+                System.out.println("Finalitzant el programa. " + movimentsIntroduits);
+                System.exit(1);
+            }
+
+            moviments[movimentsIntroduits][ID] = id;
+            moviments[movimentsIntroduits][BORSA] = borsa;
+            moviments[movimentsIntroduits][CODI] = codi;
+            moviments[movimentsIntroduits][TIPUS] = tipus;
+            moviments[movimentsIntroduits][IMPORT] = importMoviment;
+            moviments[movimentsIntroduits][DIA] = dia;
+            moviments[movimentsIntroduits][MES] = mes;
+            moviments[movimentsIntroduits][ANY] = any;
+            movimentsIntroduits++;
+
+            // Avaluem si vol introduir més dades
+            System.out.println("Vols introduir més dades? (1: Sí, 0:No)");
+            resposta = scanner.nextInt();
+            if (resposta == 0) {
+                introduirMes = false;
+                mostrarMoviments(moviments, movimentsIntroduits);
+            }
+
+        }
+        while (introduirMes);
+
+        bubbleSort(moviments, movimentsIntroduits);
+
+        //  Preguntar si el usuari desitja mostrar el moviment per tipus
+        int consultarTipusMoviment;
+        do {
+            System.out.println("Vols consultar per tipus de moviment i per tipus de Borsa? (no: 0, si: 1)");
+            consultarTipusMoviment = scanner.nextInt();
+        } while (consultarTipusMoviment != 0 && consultarTipusMoviment != 1);
+
+        if (consultarTipusMoviment == 1) {
+            // Preguntar quin tipus de moviment desitja consultar (compra o venta)
+            int tipusMoviment;
+            do {
+                System.out.println("Quin tipus de moviment (Compra: 0, Venda: 1)?");
+                tipusMoviment = scanner.nextInt();
+            } while (tipusMoviment != 0 && tipusMoviment != 1);
+
+            //  Filtrar els moviemnts per tipus y guardar en un nou array
+            int[][] movimentsFiltrats = new int[movimentsIntroduits][8];
+            int movimentsFiltratsCount = 0;
+            for (int i = 0; i < movimentsIntroduits; i++) {
+                if (moviments[i][TIPUS] == tipusMoviment) {
+                    movimentsFiltrats[movimentsFiltratsCount++] = moviments[i];
+                }
+            }
+            
+            //Fer el mateix amb la borsa escollida
+            int tipusBorsa;
+            do {
+                System.out.println("Quina borsa vols consultar?");
+                tipusBorsa = scanner.nextInt();
+            } while (tipusBorsa < BORSA_MIN && tipusBorsa > BORSA_MAX);
+                   
+            for (int i = 0; i < movimentsIntroduits; i++) {
+                for (int j = 0; j < movimentsFiltratsCount - i - 1; j++) {
+                if (moviments[i][BORSA] == tipusBorsa) {
+                    movimentsFiltrats[movimentsFiltratsCount++] = moviments[i];
+                }
+            }
+            }
+            // Ordenar los movimientos filtrados por importe utilizando Bubble Sort
+            for (int i = 0; i < movimentsFiltratsCount - 1; i++) {
+                for (int j = 0; j < movimentsFiltratsCount - i - 1; j++) {
+                    if (movimentsFiltrats[j][IMPORT] > movimentsFiltrats[j + 1][IMPORT]) {
+                        int[] temp = movimentsFiltrats[j];
+                        movimentsFiltrats[j] = movimentsFiltrats[j + 1];
+                        movimentsFiltrats[j + 1] = temp;
+                    }
+                }
+            }
+
+            //  Mostrar movimientos filtrados y ordenados
+            System.out.println("Descripció dels moviments realitzats de tipus " + (tipusMoviment == 0 ? "compra" : "venda") + " en borsa:");
+            System.out.println("id\tborsa\tcodi empresa\ttipus\timport\tdata");
+            for (int i = 0; i < movimentsFiltratsCount; i++) {
+                int[] moviment = movimentsFiltrats[i];
+                String borsaStr;
+                switch (tipusBorsa) {
+                    case 0:
+                        borsaStr = "NY";
+                        break;
+                    case 1:
+                        borsaStr = "Madrid";
+                        break;
+                    case 2:
+                        borsaStr = "Paris";
+                        break;
+                    case 3:
+                        borsaStr = "Londres";
+                        break;
+                    case 4:
+                        borsaStr = "Frankfurt";
+                        break;
+                    default:
+                        borsaStr = "Desconeguda";
+                }
+                System.out.println(moviment[ID] + "\t" + borsaStr + "\t" + moviment[CODI] + "\t" + (moviment[TIPUS] == 0 ? "compra" : "venda") + "\t" + moviment[IMPORT] + "\t" + moviment[DIA] + "/" + moviment[MES] + "/" + moviment[ANY]);
+            }
+
+            // Mostrar resumen estadístico
+            int mostrarResum;
+            do {
+                System.out.println("Vols veure un resum estadístic de les dades? (no: 0/ si:1)");
+                mostrarResum = scanner.nextInt();
+            } while (mostrarResum != 0 && mostrarResum != 1);
+
+            if (mostrarResum == 1) {
+                int totalCompres = 0;
+                int totalVendes = 0;
+                int importCompres = 0;
+                int importVendes = 0;
+
+                for (int i = 0; i < movimentsIntroduits; i++) {
+                    if (moviments[i][TIPUS] == 0) {
+                        totalCompres++;
+                        importCompres += moviments[i][IMPORT];
+                    } else {
+                        totalVendes++;
+                        importVendes += moviments[i][IMPORT];
+                    }
+                } 
+                
+              double porcentajeC = (importCompres / (double)(importCompres + importVendes)) * 100;
+              double porcentajeV = (importVendes / (double)(importCompres + importVendes)) * 100;
+
+
+                System.out.println("Número de moviments introduïts: " + movimentsIntroduits);
+                System.out.println("Número de moviments per tipus: ");
+                System.out.println("\tcompra: " + totalCompres);
+                System.out.println("\tvenda:  " + totalVendes);
+                System.out.println("Import total acumulat compres: " + importCompres + " €");
+                System.out.println("Import total acumulat vendes: " + importVendes + " €");
+                
+                System.out.println("Percentatge que suposen les compres respecte als diners totals moguts: " + porcentajeC + " %");
+                System.out.println("Percentatge que suposen les vendes respecte als diners total moguts: " + porcentajeV + " %");
+            }
+
+            // Mostrem dades introduides
+            System.out.println("S'ha introduït " + movimentsIntroduits + " registre(s) de clients.");
+        }
+            
+
+    }
+    
+ }
